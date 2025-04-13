@@ -2,150 +2,235 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <title>ホーム</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マイページ</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
+            padding: 0;
         }
 
-        .sidebar {
-            width: 200px;
-            background-color: #2c3e50;
-            color: white;
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
             height: 100vh;
+        }
+
+        /* 左のナビゲーションバー */
+        .sidebar {
+            width: 220px;
+            background-color: #007BFF;
+            color: #fff;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: fixed;
         }
 
-        .sidebar nav {
-            padding: 20px;
+        .nav-links {
+            display: flex;
+            flex-direction: column;
         }
 
-        .sidebar nav a {
-            display: block;
+        .nav-links button {
+            padding: 15px 20px;
+            background: none;
+            border: none;
             color: white;
-            text-decoration: none;
-            margin-bottom: 15px;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .sidebar nav a:hover {
-            text-decoration: underline;
+        .nav-links button:hover,
+        .nav-links button.active {
+            background-color: #0056b3;
         }
 
-        .logout {
-            padding: 20px;
-            border-top: 1px solid #444;
+        .logout-btn {
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .content {
-            margin-left: 200px;
+        .logout-btn:hover {
+            background-color: #ff4444;
+        }
+
+        /* 右側メイン画面 */
+        .main {
+            flex-grow: 1;
             padding: 30px;
-            flex: 1;
+            overflow-y: auto;
         }
 
         h1 {
+            margin-bottom: 20px;
             color: #333;
         }
 
+        /* 時間割のテーブル */
         table {
-            border-collapse: collapse;
             width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
         }
 
         th, td {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
         }
 
         th {
-            background-color: #eee;
+            background-color: #f0f0f0;
         }
 
-        .hidden {
-            display: none;
+        .subject {
+            font-weight: bold;
+        }
+
+        .details {
+            font-size: 12px;
+            color: #555;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const username = localStorage.getItem("username");
-
-            if (!user) {
-                window.location.href = "index.html";
-                return;
-            }
-
-            document.getElementById("homeSection").innerHTML = `
-                <h1>ようこそ</h1>
-                <p>${user.course}コースの${user.year}年${user.class}組の${user.number}番の${user.name}さん、ようこそ！</p>
-            `;
-
-            const schedule = {
-                sg: [
-                    ["国語<br><small>1-A教室 / 山田先生</small>", "数学<br><small>2-B教室 / 佐藤先生</small>"]
-                ],
-                ag: [
-                    ["英語<br><small>3-C教室 / 木村先生</small>", "理科<br><small>2-D教室 / 中村先生</small>"]
-                ],
-                "本科": [
-                    ["地理<br><small>1-E教室 / 渡辺先生</small>", "体育<br><small>体育館 / 高橋先生</small>"]
-                ]
-            };
-
-            const scheduleSection = document.getElementById("scheduleSection");
-            const courseSchedule = schedule[user.course] || [];
-
-            let tableHTML = "<h1>予定表</h1><table><tr><th>月曜日</th><th>火曜日</th></tr>";
-            for (let i = 0; i < courseSchedule.length; i++) {
-                tableHTML += "<tr>";
-                for (let j = 0; j < courseSchedule[i].length; j++) {
-                    tableHTML += `<td>${courseSchedule[i][j]}</td>`;
-                }
-                tableHTML += "</tr>";
-            }
-            tableHTML += "</table>";
-
-            scheduleSection.innerHTML = tableHTML;
-
-            // メニュー切り替え
-            document.getElementById("homeLink").onclick = () => {
-                document.getElementById("homeSection").classList.remove("hidden");
-                document.getElementById("scheduleSection").classList.add("hidden");
-            };
-
-            document.getElementById("scheduleLink").onclick = () => {
-                document.getElementById("homeSection").classList.add("hidden");
-                document.getElementById("scheduleSection").classList.remove("hidden");
-            };
-
-            document.getElementById("logoutBtn").onclick = () => {
-                localStorage.clear();
-                window.location.href = "index.html";
-            };
-        });
-    </script>
 </head>
 <body>
     <div class="sidebar">
-        <nav>
-            <a href="#" id="homeLink">ホーム</a>
-            <a href="#" id="scheduleLink">予定</a>
-        </nav>
-        <div class="logout">
-            <a href="#" id="logoutBtn">ログアウト</a>
+        <div class="nav-links">
+            <button id="homeTab" class="active">ホーム</button>
+            <button id="scheduleTab">予定</button>
+        </div>
+        <button class="logout-btn" onclick="logout()">ログアウト</button>
+    </div>
+
+    <div class="main">
+        <div id="homeContent">
+            <h1 id="welcomeMessage">ようこそ！</h1>
+        </div>
+
+        <div id="scheduleContent" style="display:none;">
+            <h1>今週の予定</h1>
+            <div id="scheduleTable"></div>
         </div>
     </div>
 
-    <div class="content">
-        <div id="homeSection"></div>
-        <div id="scheduleSection" class="hidden"></div>
-    </div>
+    <script>
+        const userData = JSON.parse(localStorage.getItem("userData"));
+
+        if (!userData) {
+            window.location.href = "index.html"; // index.html に戻る
+        }
+
+        document.getElementById("welcomeMessage").innerText = `${userData.course}コースの${userData.grade}の${userData.name}さん、ようこそ！`;
+
+        // サイドバーボタン切り替え
+        document.getElementById("homeTab").addEventListener("click", function () {
+            document.getElementById("homeContent").style.display = "block";
+            document.getElementById("scheduleContent").style.display = "none";
+            this.classList.add("active");
+            document.getElementById("scheduleTab").classList.remove("active");
+        });
+
+        document.getElementById("scheduleTab").addEventListener("click", function () {
+            document.getElementById("homeContent").style.display = "none";
+            document.getElementById("scheduleContent").style.display = "block";
+            this.classList.add("active");
+            document.getElementById("homeTab").classList.remove("active");
+        });
+
+        function logout() {
+            localStorage.removeItem("userData");
+            window.location.href = "index.html";
+        }
+
+        // ダミーの時間割データ（コース別）
+        const schedules = {
+            sg: [
+                ["国語", "数学", "理科", "昼食", "英語", "体育"],
+                ["社会", "音楽", "英語", "昼食", "国語", "技術"],
+                ["理科", "数学", "美術", "昼食", "英語", "保健"],
+                ["国語", "社会", "理科", "昼食", "体育", "英語"],
+                ["英語", "数学", "国語", "昼食", "技術", "社会"],
+                ["国語", "数学", "理科", "英語", "音楽", "下校"]
+            ],
+            ag: [
+                ["英語", "社会", "数学", "昼食", "体育", "国語"],
+                ["国語", "理科", "英語", "昼食", "美術", "数学"],
+                ["音楽", "体育", "国語", "昼食", "社会", "英語"],
+                ["数学", "英語", "理科", "昼食", "技術", "社会"],
+                ["体育", "英語", "音楽", "昼食", "国語", "理科"],
+                ["数学", "英語", "国語", "理科", "技術", "下校"]
+            ],
+            "本科": [
+                ["専門", "専門", "数学", "昼食", "体育", "専門"],
+                ["国語", "専門", "英語", "昼食", "社会", "専門"],
+                ["理科", "専門", "美術", "昼食", "専門", "保健"],
+                ["専門", "専門", "専門", "昼食", "体育", "専門"],
+                ["英語", "数学", "国語", "昼食", "専門", "専門"],
+                ["専門", "専門", "専門", "専門", "専門", "下校"]
+            ]
+        };
+
+        // 教室と教師のサンプル
+        function addSubjectDetail(subject, index) {
+            const details = [
+                "101教室 / 佐藤先生", "102教室 / 鈴木先生", "103教室 / 高橋先生",
+                "104教室 / 田中先生", "105教室 / 山本先生", "106教室 / 伊藤先生"
+            ];
+            return `
+                <div class="subject">${subject}</div>
+                <div class="details">${details[index % details.length]}</div>
+            `;
+        }
+
+        function renderSchedule(course) {
+            const days = ["月曜", "火曜", "水曜", "木曜", "金曜", "土曜"];
+            const periods = ["1限", "2限", "3限", "昼食", "4限", "5限"];
+            const table = document.createElement("table");
+
+            const thead = document.createElement("thead");
+            const headRow = document.createElement("tr");
+            headRow.appendChild(document.createElement("th")); // 左上の空白
+            days.forEach(day => {
+                const th = document.createElement("th");
+                th.innerText = day;
+                headRow.appendChild(th);
+            });
+            thead.appendChild(headRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement("tbody");
+            for (let i = 0; i < periods.length; i++) {
+                const row = document.createElement("tr");
+                const th = document.createElement("th");
+                th.innerText = periods[i];
+                row.appendChild(th);
+
+                for (let j = 0; j < days.length; j++) {
+                    const td = document.createElement("td");
+                    const subject = schedules[course][j][i] || "";
+                    td.innerHTML = addSubjectDetail(subject, i + j);
+                    row.appendChild(td);
+                }
+
+                tbody.appendChild(row);
+            }
+
+            table.appendChild(tbody);
+            document.getElementById("scheduleTable").innerHTML = "";
+            document.getElementById("scheduleTable").appendChild(table);
+        }
+
+        // 表描画
+        renderSchedule(userData.course);
+    </script>
 </body>
 </html>
