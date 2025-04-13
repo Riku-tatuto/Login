@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ようこそ</title>
+    // スマホ対応
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    //　見た目の設定
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+
+        //　左のメニュー
+        .sidebar {
+            width: 200px;
+            background-color: #343a40;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid #495057;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .schedule-table th {
+            background-color: #f0f0f0;
+        }
+
+        .logout {
+            margin: 20px;
+            padding: 10px;
+            background-color: #dc3545;
+            text-align: center;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    //　左のサイドバー
+    <div class="sidebar">
+        <nav>
+            <a href="#" onclick="showHome()">ホーム</a>
+            <a href="#" onclick="showSchedule()">予定</a>
+        </nav>
+        //　ログアウトボタン
+        <div class="logout" onclick="logout()">ログアウト</div>
+    </div>
+
+    <div class="content" id="mainContent">
+        //　ここにホームや予定が表示される
+    </div>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) {
+            // ログインしてなければログインページに戻す
+            window.location.href = "https://riku-tatuto.github.io/Login";
+        }
+
+        function showHome() {
+            // ホーム画面の内容を表示
+            const message = `${user.course}コースの${user.grade}年${user.class}組の${user.number}番の${user.name}さん、ようこそ！`;
+            document.getElementById("mainContent").innerHTML = `<h2>ホーム</h2><p>${message}</p>`;
+        }
+
+        function showSchedule() {
+            const scheduleData = {
+                sg: [
+                    ["国語<br>1F-101<br>佐藤", "数学<br>1F-102<br>鈴木", "英語<br>1F-103<br>田中", "理科<br>1F-104<br>山田", "社会<br>1F-105<br>加藤", "HR<br>1F-106<br>先生"],
+                    ["体育<br>体育館<br>木村", "音楽<br>音楽室<br>高橋", "美術<br>美術室<br>中村", "英語", "", ""],
+                    // 水〜土は省略 or 同じ内容
+                ],
+                ag: [
+                    ["英語<br>2F-201<br>中山", "国語<br>2F-202<br>小林", "", "", "", ""],
+                    ["理科", "社会", "", "", "", ""],
+                ],
+                本科: [
+                    ["専門1", "専門2", "専門3", "", "", ""],
+                    ["専門4", "専門5", "", "", "", ""],
+                ]
+            };
+
+            let table = `<h2>予定</h2><table class="schedule-table"><tr><th>曜日</th><th>1限</th><th>2限</th><th>3限</th><th>4限</th><th>5限</th><th>6限</th></tr>`;
+            const days = ["月曜日", "火曜日"];
+            const rows = scheduleData[user.course] || [];
+
+            for (let i = 0; i < rows.length; i++) {
+                table += `<tr><td>${days[i]}</td>`;
+                for (let j = 0; j < 6; j++) {
+                    table += `<td>${rows[i][j] || ""}</td>`;
+                }
+                table += `</tr>`;
+            }
+            table += `</table>`;
+            document.getElementById("mainContent").innerHTML = table;
+        }
+
+        function logout() {
+            localStorage.removeItem("user");
+            window.location.href = "https://riku-tatuto.github.io/Login";
+        }
+
+        // 初期表示はホーム
+        showHome();
+    </script>
+</body>
+</html>
