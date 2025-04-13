@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- ページタイトル -->
     <title>ログインページ</title>
-    
+
     <!-- 見た目 -->
     <style>
-        /* 全体の背景や配置 */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f0f0f0;
@@ -19,7 +18,6 @@
             margin: 0;
         }
 
-        /* ログインボックスの見た目 */
         .container {
             background-color: #fff;
             padding: 20px 40px;
@@ -29,26 +27,22 @@
             width: 300px;
         }
 
-        /* タイトル文字 */
         h1 {
             margin-bottom: 20px;
             color: #333;
         }
 
-        /* ユーザー名・パスワードの入力欄 */
         .input-group {
             margin-bottom: 15px;
             text-align: left;
         }
 
-        /* ラベル（「ユーザー名」など） */
         label {
             display: block;
             margin-bottom: 5px;
             color: #666;
         }
 
-        /* 入力ボックス */
         input {
             width: 100%;
             padding: 10px;
@@ -62,7 +56,6 @@
             outline: none;
         }
 
-        /* ログインボタン */
         .login-btn {
             width: 100%;
             padding: 10px;
@@ -79,7 +72,6 @@
             background-color: #0056b3;
         }
 
-        /* エラーメッセージ */
         .error-banner {
             margin-top: 15px;
             padding: 10px;
@@ -94,7 +86,6 @@
     <!-- javaスクリプト -->
     <script>
         // アカウント
-        // ユーザー名：パスワード
         const users = {
             "taro": "pass123",
             "hanako": "hana456",
@@ -111,21 +102,18 @@
                 event.preventDefault();
 
                 // 変数に代入
-                // ユーザー名を変数に代入
                 const username = document.getElementById("username").value;
-                // パスワードを変数に代入
                 const password = document.getElementById("password").value;
 
                 // 合ってるか判定
                 if (users[username] && users[username] === password) {
-                    // ログイン成功
                     // エラーなし
                     errorDiv.style.display = "none";
 
-                    // ログイン成功後の処理
-                    alert("ログインが成功しました！");
+                    // ユーザー名を保存してページ移動
+                    localStorage.setItem("loggedInUser", username);
+                    window.location.href = "welcome.html"; // ようこそ画面へ
                 } else {
-                    // ログイン失敗
                     // エラーあり
                     errorDiv.style.display = "block";
                 }
