@@ -2,8 +2,11 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ログイン</title>
+    // ページタイトル
+    <title>ログインページ</title>
+    //　見た目
     <style>
+        //　エラーメッセージ
         .error-banner {
             display: none;
             color: red;
@@ -12,30 +15,39 @@
     </style>
 </head>
 <body>
+    //　ログイン画面
     <div class="login">
         <h1>ログイン</h1>
         <form id="loginForm">
+            //　ユーザー名
             <div class="input-group">
                 <label for="username">ユーザー名</label>
                 <input type="text" id="username" name="username" required>
             </div>
+            //　パスワード
             <div class="input-group">
                 <label for="password">パスワード</label>
                 <input type="password" id="password" name="password" required>
             </div>
+            //　ボタン
             <button type="submit" class="login-btn">ログイン</button>
         </form>
+        //　エラーメッセージ
         <div id="error" class="error-banner">ユーザーIDまたはパスワードが違います。</div>
     </div>
 
     <script>
-        // あらかじめ許可されたユーザー名とパスワードの組み合わせ（キー＝ユーザー名、値＝パスワード）
+
+        //　アカウント
+        //　ユーザー名：パスワード
+        
         const users = {
             "taro": "pass123",
             "hanako": "hana456",
             "admin": "admin"
         };
 
+        
         const form = document.getElementById("loginForm");
         const errorDiv = document.getElementById("error");
 
