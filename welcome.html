@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ようこそ</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px 50px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const user = localStorage.getItem("loggedInUser");
+
+            // ユーザーがいなければログインページに戻す
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // 「ようこそ ○○さん」に表示
+            document.getElementById("welcome-text").textContent = "ようこそ、" + user + "さん！";
+
+            // ログアウトボタンの処理
+            document.getElementById("logoutBtn").addEventListener("click", function () {
+                localStorage.removeItem("loggedInUser");
+                window.location.href = "login.html";
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="welcome-text">ようこそ！</h1>
+        <button id="logoutBtn" class="logout-btn">ログアウト</button>
+    </div>
+</body>
+</html>
