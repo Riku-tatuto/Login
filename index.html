@@ -79,18 +79,25 @@
         }
     </style>
     <script type="module">
-        import { loadUserDataFromCSV } from './csvLoader.js';
+        import { authenticate } from './csvAuth.js';
+        import { loadUserDataFromCSV } from './csvUserLoader.js';
     
-        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
             e.preventDefault();
-            const userId = document.getElementById('userId').value;
-
-            const userData = await loadUserDataFromCSV(userId);
-            if (userData) {
-                localStorage.setItem('userData', JSON.stringify(userData));
-                window.location.href = 'home.html';
+    
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const errorBanner = document.getElementById("error");
+    
+            const userId = await authenticate(username, password);
+    
+            if (userId) {
+                const userData = await loadUserDataFromCSV(userId);
+                localStorage.setItem("userData", JSON.stringify(userData));
+                window.location.href = "home.html";
             } else {
-                document.getElementById('error').textContent = 'ユーザーが見つかりません';
+                errorBanner.textContent = "ユーザー名またはパスワードが違います";
+                errorBanner.style.display = "block";
             }
         });
     </script>
