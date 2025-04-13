@@ -78,31 +78,20 @@
             display: none;
         }
     </style>
-    <script>
-        // ログイン情報（ユーザー名: パスワード）
-        const users = {
-            "riku": { password: "pass1234", course: "sg", grade: "1年2組40番", name: "陸" },
-            "hanako": { password: "1234", course: "本科", grade: "102年3組5番", name: "李" },
-            "admin": { password: "admin", course: "本科", grade: "3年1組10番", name: "管理者" }
-        };
+    <script type="module">
+        import { loadUserDataFromCSV } from './csvLoader.js';
+    
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const userId = document.getElementById('userId').value;
 
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorBanner = document.getElementById('error-banner');
-
-            if (users[username] && users[username].password === password) {
-                const user = users[username];
-                localStorage.setItem("userData", JSON.stringify(user));
-                window.location.href = "home.html";
+            const userData = await loadUserDataFromCSV(userId);
+            if (userData) {
+                localStorage.setItem('userData', JSON.stringify(userData));
+                window.location.href = 'home.html';
             } else {
-                errorBanner.style.display = 'block';
+                document.getElementById('error').textContent = 'ユーザーが見つかりません';
             }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
         });
     </script>
 </head>
