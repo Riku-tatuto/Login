@@ -17,20 +17,21 @@
 
         .container {
             background-color: #fff;
-            padding: 20px 40px;
+            padding: 40px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            width: 400px; /* 幅を広めに固定 */
+            box-sizing: border-box;
         }
 
         h1 {
             margin-bottom: 20px;
             color: #333;
+            text-align: center;
         }
 
         .input-group {
             margin-bottom: 15px;
-            text-align: left;
         }
 
         label {
@@ -44,7 +45,6 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            box-sizing: border-box;
         }
 
         input:focus {
@@ -79,31 +79,29 @@
         }
     </style>
     <script>
-        // ユーザー情報（ユーザー名: パスワード）
+        // ログイン情報（ユーザー名: パスワード）
         const users = {
-            "taro": { pass: "pass123", course: "sg", year: 1, class: 2, number: 1, name: "たろう" },
-            "hanako": { pass: "hana456", course: "ag", year: 2, class: 3, number: 4, name: "はなこ" },
-            "admin": { pass: "admin", course: "本科", year: 3, class: 1, number: 2, name: "アドミン" }
+            "taro": { password: "pass123", course: "sg", grade: "1年2組1番", name: "太郎" },
+            "hanako": { password: "hana456", course: "ag", grade: "2年3組5番", name: "花子" },
+            "admin": { password: "admin", course: "本科", grade: "3年1組10番", name: "管理者" }
         };
 
         function handleLogin(event) {
             event.preventDefault();
-
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorBanner = document.getElementById('error-banner');
 
-            if (users[username] && users[username].pass === password) {
-                // 情報を保存してリダイレクト
-                localStorage.setItem("user", JSON.stringify(users[username]));
-                localStorage.setItem("username", username);
+            if (users[username] && users[username].password === password) {
+                const user = users[username];
+                localStorage.setItem("userData", JSON.stringify(user));
                 window.location.href = "home.html";
             } else {
                 errorBanner.style.display = 'block';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('loginForm').addEventListener('submit', handleLogin);
         });
     </script>
