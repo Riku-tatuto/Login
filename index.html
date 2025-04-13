@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- ページタイトル -->
     <title>ログインページ</title>
-
-    <!-- 見た目 -->
+    //　スマホでも見やすくする
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    //　見た目
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -24,7 +24,6 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 300px;
         }
 
         h1 {
@@ -51,25 +50,14 @@
             box-sizing: border-box;
         }
 
-        input:focus {
-            border-color: #aaa;
-            outline: none;
-        }
-
         .login-btn {
             width: 100%;
             padding: 10px;
             background-color: #007BFF;
+            color: white;
             border: none;
             border-radius: 5px;
-            color: #fff;
             font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .login-btn:hover {
-            background-color: #0056b3;
         }
 
         .error-banner {
@@ -82,65 +70,78 @@
             display: none;
         }
     </style>
-
-    <!-- javaスクリプト -->
-    <script>
-        // アカウント
-        const users = {
-            "riku": "pass1234",
-            "ri": "1234",
-            "admin": "admin"
-        };
-
-        // htmlから取得
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById("loginForm");
-            const errorDiv = document.getElementById("error-banner");
-
-            // フォームを再更新させない
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
-
-                // 変数に代入
-                const username = document.getElementById("username").value;
-                const password = document.getElementById("password").value;
-
-                // 合ってるか判定
-                if (users[username] && users[username] === password) {
-                    // エラーなし
-                    errorDiv.style.display = "none";
-
-                    // ユーザー名を保存してページ移動
-                    localStorage.setItem("loggedInUser", username);
-                    window.location.href = "welcome.html"; // ようこそ画面へ
-                } else {
-                    // エラーあり
-                    errorDiv.style.display = "block";
-                }
-            });
-        });
-    </script>
 </head>
 <body>
-    <!-- ログイン画面 -->
     <div class="container">
         <h1>ログイン</h1>
         <form id="loginForm">
-            <!-- ユーザー名 -->
+            //　ユーザー名
             <div class="input-group">
                 <label for="username">ユーザー名</label>
                 <input type="text" id="username" name="username" required>
             </div>
-            <!-- パスワード -->
+            //　パスワード
             <div class="input-group">
                 <label for="password">パスワード</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <!-- ボタン -->
+            //　ログインボタン
             <button type="submit" class="login-btn">ログイン</button>
         </form>
-        <!-- エラーメッセージ -->
+        //　間違えた時のメッセージ
         <div id="error-banner" class="error-banner">ユーザーIDまたはパスワードが違います。</div>
     </div>
+
+    <script>
+        // ユーザーの情報（パスワードやコースなど）
+        const users = {
+            "taro": {
+                password: "pass123",
+                name: "田中 太郎",
+                course: "sg",
+                grade: 1,
+                class: 2,
+                number: 1
+            },
+            "hanako": {
+                password: "hana456",
+                name: "鈴木 花子",
+                course: "ag",
+                grade: 2,
+                class: 1,
+                number: 5
+            },
+            "admin": {
+                password: "admin",
+                name: "管理者",
+                course: "本科",
+                grade: 3,
+                class: 3,
+                number: 10
+            }
+        };
+
+        // ページが読み込まれたらイベント追加
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('loginForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const errorBanner = document.getElementById('error-banner');
+
+                // 正しいかどうか確認
+                if (users[username] && users[username].password === password) {
+                    errorBanner.style.display = 'none';
+                    //　ログイン情報を保存してページ移動
+                    localStorage.setItem('user', JSON.stringify(users[username]));
+                    window.location.href = "home.html"; // ログイン後のページへ
+                } else {
+                    //　間違えたらエラー表示
+                    errorBanner.style.display = 'block';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
